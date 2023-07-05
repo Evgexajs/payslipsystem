@@ -1,0 +1,11 @@
+//удалить миграции
+python manage.py migrate payrollcalculation zero
+
+//миграция
+python manage.py makemigrations payrollcalculation
+python manage.py migrate
+
+//очистить db
+
+//заполнить бд
+python manage.py create_default

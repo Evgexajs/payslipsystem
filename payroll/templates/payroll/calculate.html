@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+      <div class="col-md-6 offset-md-3 mt-5">
+        <h2 class="text-center mb-4">Выбор сотрудника и месяца</h2>
+        <form method="POST">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="employee">Сотрудник</label>
+            <select class="form-control" id="employee" name="employee" {% if selected_employee %} disabled {% endif %}>
+              <option value="" selected disabled>Выберите сотрудника</option>
+              {% for employee in employees %}
+                <option value="{{ employee.id }}" {% if selected_employee == employee %} selected {% endif %}>{{ employee.full_name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="month">Месяц</label>
+            <select class="form-control" id="month" name="month" {% if not selected_employee %} disabled {% endif %}>
+              <option value="" selected disabled>Выберите месяц</option>
+              {% for month in months %}
+                <option value="{{ month }}" {% if selected_month == month %} selected {% endif %}>{{ month }}</option>
+              {% endfor %}
+            </select>
+          </div>
+            {% if selected_employee %}
+                <input type="hidden" id="employee" name="employee" value="{{ selected_employee.id }}">
+            {% endif %}
+            {% if selected_month %}
+                <input type="hidden" id="month" name="month" value="{{ selected_month }}">
+            {% endif %}
+          <button type="submit" class="btn btn-primary">Выбрать</button>
+          
+            {% if selected_employee and selected_month %}
+            <button class="btn btn-primary">
+              <a href="{% url 'generate-pdf' %}?employee_id={{selected_employee.id}}&month={{selected_month}}" target="_blank">Расчетный лист</a>
+            </button>
+            <button class="btn btn-primary">
+              <a href="{% url 'generate-ndfl' %}?employee_id={{selected_employee.id}}&month={{selected_month}}" target="_blank">2-НДФЛ</a>
+            </button>
+            {% endif %}
+        </form>
+      </div>
+    </div>
+</div>
+{% endblock %}
